@@ -10,6 +10,8 @@ let allGuesses = {
   playerFourGuess: []
 };
 
+// randomNumber = randomNumber(1,25);
+
 // This must be added before GET & POST routes.
 app.use(bodyParser.urlencoded({extended:true}))
 
@@ -41,6 +43,12 @@ app.get('/guesses', (req, res) => {
   console.log('GET guesses');
   res.send(allGuesses);
 })
+
+//fixME 
+// app.get('/random', (req, res) => {
+//   console.log('GET guesses');
+//   res.send(allGuesses);
+// })
 
 app.listen(PORT, () => {
   console.log ('Server is running on port', PORT)

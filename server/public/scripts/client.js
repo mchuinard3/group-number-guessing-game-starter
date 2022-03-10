@@ -4,7 +4,12 @@ let randomNum = 0;
 function handleReady() {
   console.log("jquery is loaded!")
   $(`#submit`).on(`click`, handleSubmit);
+
+  //$.ajax 
+  // url: /random
+  // method: get
   randomNum = randomNumber(1, 25);
+  console.log(randomNum);
 }
 
 function handleSubmit() {
@@ -29,7 +34,6 @@ function handleSubmit() {
     $(`#playerTwo`).val('');
     $(`#playerThree`).val('');
     $(`#playerFour`).val('');
-
     
   })
   getGuesses();
@@ -56,11 +60,12 @@ function checkGuesses(guesses, player) {
     if (guess < randomNum) {
       hint = 'guess higher';
     }
-    if (guess === randomNum) {
+    if (guess == randomNum) {
       hint = 'You guessed the correct number!!!';
     }
+    $(player).append(`<li>Guess: ${guess} - ${hint}</li>`)
   }
-  $(player).append(`<li>Guess: ${guess} - ${hint}</li>`)
+  
 }
 
 function randomNumber(min, max) {
@@ -68,6 +73,12 @@ function randomNumber(min, max) {
 }
 
 function render(guesses) {
+    
+  $('#playerOneGuessList').empty();
+  $('#playerTwoGuessList').empty();
+  $('#playerThreeGuessList').empty();
+  $('#playerFourGuessList').empty();
+
   let pOneGuesses = guesses.playerOneGuess;
   let pTwoGuesses = guesses.playerTwoGuess;
   let pThreeGuesses = guesses.playerThreeGuess;
