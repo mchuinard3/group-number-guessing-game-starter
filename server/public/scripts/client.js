@@ -1,22 +1,50 @@
 $(document).ready(handleReady);
 
-let randomNum = 0;
+let randomNum;
+
 function handleReady() {
   console.log("jquery is loaded!")
   $(`#submit`).on(`click`, handleSubmit);
+  $('#restart').on('click', '#restartButton', restartGame);
+  $.ajax({
+    url: '/random',
+    method: 'GET',
+  }).then(function (response) {
+    console.log(response);
+    randomNum = response.randomNumber;
+  })
 
-  //$.ajax 
-  // url: /random
-  // method: get
-  randomNum = randomNumber(1, 25);
-  console.log(randomNum);
 }
+
+function restartGame() {
+  $.ajax({
+    url: '/random',
+    method: 'GET',
+  }).then(function (response) {
+    console.log(response);
+    randomNum = response.randomNumber;
+  })
+}
+
+// function createRando() {
+//   $.ajax({
+//     url: '/random',
+//     method: 'GET',
+//   }).then(function (response) {
+//     console.log(response);
+//     randomNum = response.randomNumber;
+//   })
+//   console.log(randomNum);
+// }
 
 function handleSubmit() {
   let playerOne = $(`#playerOne`).val();
   let playerTwo = $(`#playerTwo`).val();
   let playerThree = $(`#playerThree`).val();
   let playerFour = $(`#playerFour`).val();
+
+
+  // createRando();
 
   $.ajax({
     url: '/guesses',
@@ -30,17 +58,18 @@ function handleSubmit() {
   }).then(function (response) {
     console.log(response);
 
-    $('#playerOne').val('')
+    $('#playerOne').val('');
     $(`#playerTwo`).val('');
     $(`#playerThree`).val('');
     $(`#playerFour`).val('');
-    
+
   })
   getGuesses();
 
 }
 
 function getGuesses() {
+  
 
   $.ajax({
     url: '/guesses',
@@ -56,24 +85,28 @@ function checkGuesses(guesses, player) {
   for (let guess of guesses) {
     if (guess > randomNum) {
       hint = 'guess lower';
+      $(player).append(`<li>Guess: ${guess} - ${hint}</li>`)
     }
-    if (guess < randomNum) {
+    else if (guess < randomNum) {
       hint = 'guess higher';
+      $(player).append(`<li>Guess: ${guess} - ${hint}</li>`)
     }
-    if (guess == randomNum) {
+    else if (guess == randomNum) {
       hint = 'You guessed the correct number!!!';
-    }
-    $(player).append(`<li>Guess: ${guess} - ${hint}</li>`)
-  }
-  
-}
 
-function randomNumber(min, max) {
-  return Math.floor(Math.random() * (1 + max - min) + min);
+      $(player).append(`<li>Guess: ${guess} - ${hint}</li>`)
+      $(player).closest('div').css("background-color", "#49fb35");
+      $('#restart').append('<button id="restartButton">Play Again</button>');
+    }
+    
+  }
+
 }
 
 function render(guesses) {
-    
+
+  console.log(randomNum);
+
   $('#playerOneGuessList').empty();
   $('#playerTwoGuessList').empty();
   $('#playerThreeGuessList').empty();
@@ -83,9 +116,9 @@ function render(guesses) {
   let pTwoGuesses = guesses.playerTwoGuess;
   let pThreeGuesses = guesses.playerThreeGuess;
   let pFourGuesses = guesses.playerFourGuess;
-  
-  checkGuesses(pOneGuesses, '#playerOneGuessList')
-  checkGuesses(pTwoGuesses, '#playerTwoGuessList')
-  checkGuesses(pThreeGuesses, '#playerThreeGuessList')
-  checkGuesses(pFourGuesses, '#playerFourGuessList')
+
+  checkGuesses(pOneGuesses, '#playerOneGuessList');
+  checkGuesses(pTwoGuesses, '#playerTwoGuessList');
+  checkGuesses(pThreeGuesses, '#playerThreeGuessList');
+  checkGuesses(pFourGuesses, '#playerFourGuessList');
 }

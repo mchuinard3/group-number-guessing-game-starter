@@ -1,5 +1,5 @@
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const app = express();
 const PORT = 5000;
 
@@ -10,10 +10,13 @@ let allGuesses = {
   playerFourGuess: []
 };
 
-// randomNumber = randomNumber(1,25);
+function randomNumber(min, max) {
+  return Math.floor(Math.random() * (1 + max - min) + min);
+}
+
 
 // This must be added before GET & POST routes.
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({extended:true}));
 
 // Serve up static files (HTML, CSS, Client JS)
 app.use(express.static('server/public'));
@@ -45,10 +48,12 @@ app.get('/guesses', (req, res) => {
 })
 
 //fixME 
-// app.get('/random', (req, res) => {
-//   console.log('GET guesses');
-//   res.send(allGuesses);
-// })
+app.get('/random', (req, res) => {
+  console.log('GET random');
+  res.send({
+    randomNumber: randomNumber(1, 25)
+  });
+})
 
 app.listen(PORT, () => {
   console.log ('Server is running on port', PORT)
