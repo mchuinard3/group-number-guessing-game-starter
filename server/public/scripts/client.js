@@ -23,7 +23,10 @@ function restartGame() {
   }).then(function (response) {
     console.log(response);
     randomNum = response.randomNumber;
+
   })
+  $(this).closest('button').remove();
+  $('div').css('background-color', 'white');
 }
 
 // function createRando() {
